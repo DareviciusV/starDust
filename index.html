@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Simulation</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+    <div id="topParticles">
+        <h3>Top 5 Particles</h3>
+        <ul id="topParticlesList"></ul>
+    </div>
+    <div id="creator">
+        <p>Created by Darroify</p>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="backgroundMusic" autoplay loop>
+        <source src="sounds/background.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        // Set the volume of the background music to level 5 (50% volume)
+        const music = document.getElementById("backgroundMusic");
+        music.volume = 0.4; // Set volume to 50%
+    </script>
+
+    <audio id="explosionSound">
+        <source src="sounds/bang.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        const explosionSound = document.getElementById("explosionSound");
+        explosionSound.volume = 0.3; // Set volume to 30%
+    </script>
+
+    <script src="particles.js"></script>
+</body>
+</html>
