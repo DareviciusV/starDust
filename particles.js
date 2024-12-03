@@ -20,7 +20,16 @@ let zoomedIn = false;
 
 // Background image setup
 const backgroundImage = new Image();
-backgroundImage.src = 'assets/images/nasa.png'; // Correct background image path
+backgroundImage.src = 'assets/images/nasa.png'; // Ensure the path is correct
+
+backgroundImage.onload = () => {
+    console.log("Background image loaded");
+    updateParticles(); // Start animation loop
+};
+
+backgroundImage.onerror = () => {
+    console.error("Error loading background image");
+};
 
 // Explosion sound setup
 const explosionSound = document.getElementById("explosionSound");
@@ -119,6 +128,8 @@ canvas.addEventListener("click", (e) => {
 
 function updateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw background image
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
     for (let i = particles.length - 1; i >= 0; i--) {
@@ -174,4 +185,3 @@ function updateParticles() {
 }
 
 generateParticles(numParticles);
-updateParticles();
