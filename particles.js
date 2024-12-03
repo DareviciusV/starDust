@@ -1,37 +1,33 @@
 const canvas = document.getElementById("particleCanvas");
 const ctx = canvas.getContext("2d");
 
-// Set canvas size
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Particle settings
 const minParticleSize = 1;
 const maxParticleSize = 50;
 const growthRate = 0.1;
 const particles = [];
 const numParticles = 500;
 
-// Zoom and offset values
 let zoomFactor = 1.0;
 let offsetX = 0;
 let offsetY = 0;
 let zoomedIn = false;
 
-// Background image setup
 const backgroundImage = new Image();
-backgroundImage.src = 'assets/images/nasa.png'; // Ensure the path is correct
+backgroundImage.src = 'assets/images/nasa.png';
 
 backgroundImage.onload = () => {
     console.log("Background image loaded");
-    updateParticles(); // Start animation loop
+    updateParticles();
 };
 
 backgroundImage.onerror = () => {
     console.error("Error loading background image");
 };
 
-// Explosion sound setup
+
 const explosionSound = document.getElementById("explosionSound");
 
 class Particle {
@@ -85,7 +81,8 @@ class Particle {
     }
 
     updateLifetime() {
-        this.lifetime = (Date.now() - this.creationTime) / 1000; // Lifetime in seconds
+        this.lifetime = (Date.now() - this.creationTime) / 1000;
+
     }
 
     checkExplosion() {
@@ -129,7 +126,6 @@ canvas.addEventListener("click", (e) => {
 function updateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw background image
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
     for (let i = particles.length - 1; i >= 0; i--) {
