@@ -1,8 +1,10 @@
 const canvas = document.getElementById("particleCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+let canvasWidth = window.innerWidth;
+let canvasHeight = window.innerHeight;
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
 
 const minParticleSize = 1;
 const maxParticleSize = 50;
@@ -27,9 +29,89 @@ backgroundImage.onerror = () => {
     console.error("Error loading background image");
 };
 
-
 const explosionSound = document.getElementById("explosionSound");
+const backgroundSound = document.getElementById("backgroundSound");
+const soundToggleButton = document.getElementById("soundToggleButton");
+backgroundSound.muted = true;
 
+soundToggleButton.addEventListener("click", () => {
+    if (backgroundSound.muted) {
+        backgroundSound.muted = false;
+        soundToggleButton.textContent = "Mute Sound";
+    } else {
+        backgroundSound.muted = true;
+        soundToggleButton.textContent = "Unmute Sound";
+    }
+});
+
+
+const ufoImage = new Image();
+ufoImage.src = 'assets/images/ufo.png';
+
+
+ufoImage.onload = () => {
+    console.log('UFO image loaded');
+};
+
+
+class UFO {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = 50;
+        this.maxSpeed = 4;
+        this.speed = Math.random() * 2 + 1;
+        this.velocityX = (Math.random() - 0.5) * this.speed;
+        this.velocityY = (Math.random() - 0.5) * this.speed;
+        this.acceleration = 0.05;
+        this.rotationAngle = Math.random() * 2 * Math.PI;
+        this.rotationSpeed = 0.01;
+    }
+
+    move() {
+
+        this.velocityX += Math.cos(this.rotationAngle) * this.acceleration;
+        this.velocityY += Math.sin(this.rotationAngle) * this.acceleration;
+
+        const speedMagnitude = Math.sqrt(this.velocityX ** 2 + this.velocityY ** 2);
+        if (speedMagnitude > this.maxSpeed) {
+            this.velocityX = (this.velocityX / speedMagnitude) * this.maxSpeed;
+            this.velocityY = (this.velocityY / speedMagnitude) * this.maxSpeed;
+        }
+
+        // Update position
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+
+        if (Math.random() < 0.02) {
+            this.rotationAngle += (Math.random() - 0.5) * Math.PI;
+        }
+
+
+        if (this.x < 0) {
+            this.x = canvas.width;
+        } else if (this.x > canvas.width) {
+            this.x = 0;
+        }
+
+        if (this.y < 0) {
+            this.y = canvas.height;
+        } else if (this.y > canvas.height) {
+            this.y = 0;
+        }
+    }
+
+    draw() {
+
+        ctx.drawImage(ufoImage, this.x, this.y, this.size, this.size);
+    }
+}
+
+
+// Create UFO instance
+const ufo = new UFO();
+
+// Particle class definition
 class Particle {
     constructor(x, y, radius, velocityX, velocityY) {
         this.x = x;
@@ -82,7 +164,6 @@ class Particle {
 
     updateLifetime() {
         this.lifetime = (Date.now() - this.creationTime) / 1000;
-
     }
 
     checkExplosion() {
@@ -123,11 +204,25 @@ canvas.addEventListener("click", (e) => {
     }
 });
 
+// Resize the canvas when the window size changes
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    canvasWidth = window.innerWidth;
+    canvasHeight = window.innerHeight;
+});
+
 function updateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw background image
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 
+    // Move and draw the UFO
+    ufo.move();
+    ufo.draw();
+
+    // Update and draw particles
     for (let i = particles.length - 1; i >= 0; i--) {
         const particle = particles[i];
         particle.move();
